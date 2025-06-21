@@ -1,0 +1,17 @@
+# 📁 requirements.txt
+fastapi
+uvicorn
+python-multipart
+python-dotenv
+openai
+chromadb
+pydantic
+typing-extensions
+requests
+aiofiles
+python-jose
+passlib
+Pillow
+pandas
+numpy
+scipy

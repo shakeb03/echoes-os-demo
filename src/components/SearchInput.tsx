@@ -33,6 +33,7 @@ export default function SearchInput({
   const handleVoiceSearch = () => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition
+      
       const recognition = new SpeechRecognition()
       
       recognition.continuous = false
@@ -43,7 +44,7 @@ export default function SearchInput({
         setIsListening(true)
       }
 
-      recognition.onresult = (event) => {
+      recognition.onresult = (event: { results: { transcript: any }[][] }) => {
         const transcript = event.results[0][0].transcript
         onChange(transcript)
         setIsListening(false)
