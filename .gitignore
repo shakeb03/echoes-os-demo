@@ -111,3 +111,5 @@ cython_debug/
 # macOS
 .DS_Store
 
+
+src/chroma_db
