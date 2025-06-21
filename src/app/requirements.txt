@@ -15,3 +15,5 @@ Pillow
 pandas
 numpy
 scipy
+beautifulsoup4
+yt-dlp

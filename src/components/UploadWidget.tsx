@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
-import { Upload, File, X, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
+import { Upload, File, X, Loader2, CheckCircle, AlertCircle, Search, GitBranch } from 'lucide-react'
 
 interface UploadedFile {
   file: File
@@ -20,6 +20,7 @@ interface UploadedFile {
 export default function UploadWidget() {
   const [files, setFiles] = useState<UploadedFile[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const newFiles = acceptedFiles.map(file => ({
@@ -87,17 +88,30 @@ export default function UploadWidget() {
           throw new Error('Upload failed')
         }
 
-        // Update to processing
-        setFiles(prev => prev.map(f => 
-          f.id === uploadFile.id ? { ...f, status: 'processing', progress: 95 } : f
-        ))
-
         const result = await response.json()
         
-        // Complete
-        setFiles(prev => prev.map(f => 
-          f.id === uploadFile.id ? { ...f, status: 'complete', progress: 100 } : f
-        ))
+        if (result.success) {
+          // Update to processing
+          setFiles(prev => prev.map(f => 
+            f.id === uploadFile.id ? { ...f, status: 'processing', progress: 95 } : f
+          ))
+
+          // Simulate processing time
+          setTimeout(() => {
+            setFiles(prev => prev.map(f => 
+              f.id === uploadFile.id ? { ...f, status: 'complete', progress: 100 } : f
+            ))
+            
+            // Show success notification
+            if (files.filter(f => f.status === 'complete').length === files.length) {
+              setTimeout(() => {
+                setShowSuccess(true)
+              }, 500)
+            }
+          }, 1000)
+        } else {
+          throw new Error(result.details || 'Processing failed')
+        }
 
       } catch (error) {
         console.error('Upload error:', error)

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ArrowLeft, Upload, Link as LinkIcon, FileText, Loader2 } from 'lucide-react'
+import { ArrowLeft, Upload, Link as LinkIcon, FileText, Loader2, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import UploadWidget from '@/components/UploadWidget'
 
@@ -16,6 +16,7 @@ export default function UploadPage() {
   const [urlInput, setUrlInput] = useState('')
   const [textInput, setTextInput] = useState('')
   const [title, setTitle] = useState('')
+  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null)
 
   const handleUrlSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,17 +27,32 @@ export default function UploadPage() {
       const response = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          type: 'url', 
+        body: JSON.stringify({
+          type: 'url',
           content: urlInput,
           title: title || 'Untitled URL Content'
         })
       })
       const result = await response.json()
-      console.log('Upload result:', result)
-      // Handle success
+
+      if (result.success) {
+        // Show success message
+        setUploadSuccess(result.title)
+        setUrlInput('')
+        setTitle('')
+
+        // Auto redirect after showing success
+        setTimeout(() => {
+          if (confirm('Would you like to go to the Ask page to search your uploaded content?')) {
+            window.location.href = '/ask'
+          }
+        }, 3000)
+      } else {
+        throw new Error(result.details || 'Upload failed')
+      }
     } catch (error) {
       console.error('Upload failed:', error)
+      alert(`❌ Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsProcessing(false)
     }
@@ -51,17 +67,32 @@ export default function UploadPage() {
       const response = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          type: 'text', 
+        body: JSON.stringify({
+          type: 'text',
           content: textInput,
           title: title || 'Untitled Text Content'
         })
       })
       const result = await response.json()
-      console.log('Upload result:', result)
-      // Handle success
+
+      if (result.success) {
+        // Show success message
+        setUploadSuccess(result.title)
+        setTextInput('')
+        setTitle('')
+
+        // Auto redirect after showing success
+        setTimeout(() => {
+          if (confirm('Would you like to go to the Ask page to search your uploaded content?')) {
+            window.location.href = '/ask'
+          }
+        }, 3000)
+      } else {
+        throw new Error(result.details || 'Upload failed')
+      }
     } catch (error) {
       console.error('Upload failed:', error)
+      alert(`❌ Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsProcessing(false)
     }
@@ -140,15 +171,15 @@ export default function UploadPage() {
                         required
                       />
                     </div>
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       disabled={isProcessing}
                       className="w-full bg-purple-600 hover:bg-purple-700"
                     >
                       {isProcessing ? (
                         <>
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Processing...
+                          Processing URL...
                         </>
                       ) : (
                         'Process URL'
@@ -183,8 +214,8 @@ export default function UploadPage() {
                         required
                       />
                     </div>
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       disabled={isProcessing}
                       className="w-full bg-purple-600 hover:bg-purple-700"
                     >
