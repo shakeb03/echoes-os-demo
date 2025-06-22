@@ -5,6 +5,8 @@ from typing import List, Optional, Union
 import os # Import os to access environment variables
 from openai import OpenAI
 import logging # For logging potential errors
+from dotenv import load_dotenv
+load_dotenv()
 
 router = APIRouter()
 

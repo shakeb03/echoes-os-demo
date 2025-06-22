@@ -26,7 +26,7 @@ export default function BlueprintPage() {
   const handleStepOne = async () => {
     setIsLoadingStep1(true)
     try {
-      const res = await fetch('/api/analyze', {
+      const res = await fetch('${FASTAPI_URL}/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ step: 1, content }),
@@ -44,7 +44,7 @@ export default function BlueprintPage() {
     if (!stepOnePrompts.length || !title || !topics || !context) return
     setIsLoadingStep2(true)
     try {
-      const res = await fetch('/api/analyze', {
+      const res = await fetch('${FASTAPI_URL}/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -69,7 +69,7 @@ export default function BlueprintPage() {
     if (!stepTwoPrompt) return
     setIsGenerating(true)
     try {
-      const res = await fetch('/api/generate', {
+      const res = await fetch('${FASTAPI_URL}/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: stepTwoPrompt }),
