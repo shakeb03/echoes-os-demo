@@ -48,7 +48,7 @@ export default function UnifiedPage() {
 
     setIsProcessing(true)
     try {
-      const response = await fetch('${FASTAPI_URL}/api/echoes-process', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_FASTAPI_URL}/api/echoes-process', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: input })

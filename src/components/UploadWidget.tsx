@@ -77,7 +77,7 @@ export default function UploadWidget() {
           ))
         }, 200)
 
-        const response = await fetch('${FASTAPI_URL}/api/upload', {
+        const response = await fetch('${process.env.NEXT_PUBLIC_FASTAPI_URL}/api/upload', {
           method: 'POST',
           body: formData
         })
