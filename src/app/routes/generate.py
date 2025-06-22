@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from openai import OpenAI # Import OpenAI class
 import os
 import logging # Added for better error logging
+from dotenv import load_dotenv
+load_dotenv()
 
 router = APIRouter()
 
