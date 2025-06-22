@@ -4,6 +4,8 @@ from openai import OpenAI
 import os
 from typing import Optional
 import logging
+from dotenv import load_dotenv
+load_dotenv()
 
 # Initialize OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))

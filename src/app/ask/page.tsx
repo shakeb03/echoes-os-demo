@@ -1,7 +1,8 @@
 // 📁 /app/ask/page.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -50,7 +51,16 @@ export default function AskPage() {
     handleSearch(query)
   }
 
-  const suggestedQueries = [
+  const handleFindRelated = async (memory: MemoryResult) => {
+    // Create a related search query based on the memory content
+    const keywords = memory.title.split(' ').slice(0, 4).join(' ')
+    const relatedQuery = `Similar to: ${keywords}`
+    
+    setQuery(relatedQuery)
+    await handleSearch(relatedQuery)
+  }
+    
+  const suggestedQueries=[
     "When did I talk about burnout?",
     "What metaphors did I use for motivation?",
     "Show me content about productivity",
@@ -162,7 +172,11 @@ export default function AskPage() {
 
               <div className="grid gap-4">
                 {results.map((result) => (
-                  <MemoryCard key={result.id} memory={result} />
+                  <MemoryCard 
+                    key={result.id} 
+                    memory={result} 
+                    onFindRelated={handleFindRelated}
+                  />
                 ))}
               </div>
             </div>

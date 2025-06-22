@@ -1,0 +1,3 @@
+[submodule "echoes-os-core"]
+	path = echoes-os-core
+	url = https://github.com/shakeb03/echoes-os-core
