@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 import uvicorn
 import os
 from dotenv import load_dotenv
+from app.routes import generate
 
 from app.routes import upload, ask, analyze, echoes_process
 
@@ -39,6 +40,7 @@ app.include_router(upload.router, prefix="/api", tags=["upload"])
 app.include_router(ask.router, prefix="/api", tags=["memory"])
 app.include_router(analyze.router, prefix="/api", tags=["blueprint"])
 app.include_router(echoes_process.router, prefix="/api", tags=["unified"])
+app.include_router(generate.router, prefix="/api", tags=["generate"])
 
 # Global exception handler
 @app.exception_handler(Exception)
