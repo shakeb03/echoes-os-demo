@@ -11,7 +11,7 @@ router = APIRouter()
 # The OpenAI() constructor automatically looks for the OPENAI_API_KEY environment variable.
 # It's good practice to handle potential initialization errors.
 try:
-    client = OpenAI()
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 except Exception as e:
     logging.error(f"Failed to initialize OpenAI client in generate.py. Ensure OPENAI_API_KEY is set: {e}")
     # In a production app, you might want to consider exiting or
