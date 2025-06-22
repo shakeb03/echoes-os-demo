@@ -14,6 +14,13 @@ interface SearchInputProps {
   placeholder?: string
 }
 
+declare global {
+  interface Window {
+    webkitSpeechRecognition: any
+    SpeechRecognition: any
+  }
+}
+
 export default function SearchInput({ 
   value, 
   onChange, 
