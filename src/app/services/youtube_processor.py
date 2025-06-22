@@ -106,6 +106,7 @@ async def get_youtube_info(url: str) -> Dict[str, Any]:
         ydl_opts = {
             'quiet': True,
             'no_warnings': True,
+            'cookiesfrombrowser': ('chrome',),  # Requires `keyring` and `pycryptodomex` installed
         }
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
