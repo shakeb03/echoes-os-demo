@@ -1,4 +1,3 @@
-// 📁 /app/blueprint/page.tsx
 'use client'
 
 import { useState } from 'react'
@@ -8,6 +7,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { GitBranch, Lightbulb, Loader2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import MemoryCard from '@/components/MemoryCard';
 
 export default function BlueprintPage() {
   const [content, setContent] = useState('')
@@ -15,9 +16,12 @@ export default function BlueprintPage() {
   const [stepTwoPrompt, setStepTwoPrompt] = useState('')
   const [isLoadingStep1, setIsLoadingStep1] = useState(false)
   const [isLoadingStep2, setIsLoadingStep2] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
   const [title, setTitle] = useState('')
   const [topics, setTopics] = useState('')
   const [context, setContext] = useState('')
+  const [generatedContent, setGeneratedContent] = useState('')
+  const [showModal, setShowModal] = useState(false)
 
   const handleStepOne = async () => {
     setIsLoadingStep1(true)
@@ -58,6 +62,27 @@ export default function BlueprintPage() {
       console.error('Error in Step 2:', error)
     } finally {
       setIsLoadingStep2(false)
+    }
+  }
+
+  const handleGenerateContent = async () => {
+    if (!stepTwoPrompt) return
+    setIsGenerating(true)
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: stepTwoPrompt }),
+      })
+      const data = await res.json()
+      setGeneratedContent(data.output || 'No content returned.')
+      setShowModal(true)
+    } catch (error) {
+      console.error('Error generating content:', error)
+      setGeneratedContent('Failed to generate content.')
+      setShowModal(true)
+    } finally {
+      setIsGenerating(false)
     }
   }
 
@@ -120,9 +145,23 @@ export default function BlueprintPage() {
                 </Button>
 
                 {stepTwoPrompt && (
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-slate-300">Final Compositional Prompt:</p>
-                    <div className="bg-slate-700 px-3 py-2 rounded text-sm text-slate-100 whitespace-pre-wrap">{stepTwoPrompt}</div>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm font-medium text-slate-300">Final Compositional Prompt:</p>
+                      <div className="bg-slate-700 px-3 py-2 rounded text-sm text-slate-100 whitespace-pre-wrap">
+                        {stepTwoPrompt}
+                      </div>
+                    </div>
+                    <Button onClick={handleGenerateContent} disabled={isGenerating} className="w-full bg-purple-600 hover:bg-purple-700">
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          Generating...
+                        </>
+                      ) : (
+                        'Generate My Content'
+                      )}
+                    </Button>
                   </div>
                 )}
               </CardContent>
@@ -130,6 +169,25 @@ export default function BlueprintPage() {
           )}
         </div>
       </div>
+
+      {/* Output Modal */}
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+  <DialogContent
+    className="max-w-2xl bg-slate-800 border-slate-700 p-6"
+    style={{ maxHeight: '80vh', overflowY: 'auto' }}
+  >
+    <DialogHeader>
+      <DialogTitle className="text-white">Your AI-Generated Content</DialogTitle>
+    </DialogHeader>
+
+    <div
+      className="mt-4 rounded bg-slate-700 text-sm text-slate-300 whitespace-pre-wrap p-4"
+      style={{ maxHeight: '60vh', overflowY: 'auto' }}
+    >
+      {generatedContent}
+    </div>
+  </DialogContent>
+</Dialog>
     </div>
   )
 }
