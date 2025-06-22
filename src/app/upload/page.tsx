@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ArrowLeft, Upload, Link as LinkIcon, FileText, Loader2, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import UploadWidget from '@/components/UploadWidget'
+import { toast } from 'sonner'
 
 export default function UploadPage() {
   const [isProcessing, setIsProcessing] = useState(false)
@@ -42,11 +43,13 @@ export default function UploadPage() {
         setTitle('')
 
         // Auto redirect after showing success
-        setTimeout(() => {
-          if (confirm('Would you like to go to the Ask page to search your uploaded content?')) {
-            window.location.href = '/ask'
-          }
-        }, 3000)
+        toast.success(`✅ Uploaded: ${result.title}`, {
+          description: 'Your content has been saved to memory.',
+          action: {
+            label: 'Go to Ask Page',
+            onClick: () => window.location.href = '/ask',
+          },
+        })
       } else {
         throw new Error(result.details || 'Upload failed')
       }
