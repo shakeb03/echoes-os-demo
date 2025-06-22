@@ -1,4 +1,4 @@
-# 🧠 Echoes OS – AI-Powered Memory & Prompt Builder
+# 🧠 Echoes OS – Your Creative Second Brain
 
 **Echoes OS** is an AI-driven tool that helps creators reverse-engineer their content to uncover original prompts, generate new creative drafts, and build a reusable memory system. It supports a wide range of input types—text, audio, YouTube links, and more—embedding and storing meaningful insights for future inspiration or retrieval.
 
