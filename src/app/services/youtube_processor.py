@@ -24,6 +24,7 @@ async def download_and_transcribe_youtube(url: str, title: str) -> Dict[str, Any
             'audioquality': '192K',
             'no_warnings': True,
             'quiet': True,
+            'cookiefile': '/home/ubuntu/cookies.txt'
         }
         
         # Download the audio
